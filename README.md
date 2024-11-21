@@ -13,6 +13,7 @@ Chatbook is a real-time chat application built with the MERN stack, offering a s
 - **Responsive Design**: Seamless experience across desktop and mobile devices
 - **Message History**: Access your past conversations anytime
 - **User Profiles**: Customize your profile with avatars and status messages
+- **Customizable Themes**: Customize your profile with different themes of your choice
 
 ## 🛠️ Technologies Used
 
