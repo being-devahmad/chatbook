@@ -11,6 +11,16 @@ const ChatContainer = () => {
     const { messages, getMessages, isMessagesLoading, selectedUser, subscribeToMessages, unsubscribeFromMessages } = useChatStore();
 
     const { authUser } = useAuthStore();
+    const messageEndRef = useRef(null)
+
+    // whenever there is new message it should scroll to end 
+    useEffect(() => {
+        if (messageEndRef.current && messages) {
+            messageEndRef.current.scrollIntoView({
+                behaviour: "smooth"
+            })
+        }
+    }, [messages])
 
     useEffect(() => {
         getMessages(selectedUser._id);
@@ -19,7 +29,7 @@ const ChatContainer = () => {
 
         return () => unsubscribeFromMessages()
 
-    }, [selectedUser._id, getMessages , subscribeToMessages , unsubscribeFromMessages]);
+    }, [selectedUser._id, getMessages, subscribeToMessages, unsubscribeFromMessages]);
 
     if (isMessagesLoading) {
         return (
@@ -42,7 +52,7 @@ const ChatContainer = () => {
                     <div
                         key={message._id}
                         className={`chat ${message.senderId === authUser._id ? "chat-end" : "chat-start"}`}
-                    // ref={messageEndRef}
+                        ref={messageEndRef}
                     >
                         <div className=" chat-image avatar">
                             <div className="size-10 rounded-full border">
