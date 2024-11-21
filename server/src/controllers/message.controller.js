@@ -1,4 +1,5 @@
 import cloudinary from "../lib/cloudinary.js";
+import { getReceiverSocketId, io } from "../lib/socket.js";
 import Message from "../models/message.mdel.js";
 import User from "../models/user.model.js";
 
@@ -8,9 +9,6 @@ export const getAllUsers = async (req, res) => {
         const filteredUsers = await User
             .find({ _id: { $ne: loggedInUserId } })
             .select("-password");
-
-        console.log("LoggedInUserId-->", loggedInUserId)
-        console.log("filteredUsers-->", filteredUsers)
 
         res.status(200).json(filteredUsers);
 
@@ -63,7 +61,12 @@ export const sendMessage = async (req, res) => {
 
         await newMessage.save();
 
-        // todo : real time functionality using socket-io
+        // real time functionality using socket-io
+        const receiverSocketId = getReceiverSocketId(receiverId)
+
+        if (receiverSocketId) {  // basically this means if user is online
+            io.to(receiverSocketId).emit("newMessage", newMessage)  
+        }
 
         res.status(201).json(newMessage);
 
